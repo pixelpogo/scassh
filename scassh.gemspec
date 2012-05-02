@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/scassh/version', __FILE__)
+$:.push File.expand_path("../lib", __FILE__)
+
+require "scassh/version"
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Oliver Grimm"]
