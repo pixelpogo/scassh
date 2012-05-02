@@ -1,0 +1,81 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+
+require 'optparse'
+require 'ostruct'
+require 'scassh'
+
+
+options = OpenStruct.new
+OptionParser.new do |opts|
+
+  opts.banner     = "Scassh"
+  opts.define_head  "SSH to your Scalarium instances easily"
+  opts.separator    ""
+  opts.separator    "Options:"
+
+  opts.on_tail("--help", "Show this message") do
+    puts opts
+    exit
+  end
+
+  opts.on_tail("-v", "--version", "Show version") do
+    puts "Scassh #{Scassh::VERSION}"
+    exit
+  end
+
+  opts.on_tail("-n", "--no-cache", "Disable API caching"){ options.caching_enabled = false }
+
+  opts.on_tail("-c", "--clear-cache", "Clear Scalarium API cache") do
+    Scassh::Api::reset_cache
+    puts "Scalarium API cache cleared."
+    exit
+  end
+
+  begin
+    opts.parse!
+  rescue OptionParser::ParseError
+    puts opts
+    exit 1
+  end
+
+end
+
+begin
+  cloud, instance = nil
+
+  choice = Scassh::Choice.new
+  choice.caching_enabled = options.caching_enabled unless options.caching_enabled.nil?
+
+  system "clear"
+
+  puts "\n============================================================="
+  puts "\n         Scassh - ssh to your Scalarium instance"
+  puts "\n=============================================================\n"
+
+
+  puts "\n\n"
+  puts "\nAvailable Scalarium clouds:"
+  puts "-----------------------------\n"
+  cloud = choice.select_cloud while cloud.nil?
+
+  system "clear"
+  puts "\nYou chose cloud #{cloud[:name]}\n"
+
+  puts "\nAvailable Instances:"
+  puts "----------------------\n"
+  instance = choice.select_instance(cloud[:id]) while instance.nil?
+
+  system "clear"
+  puts "\nYou chose instance #{instance[:name]}"
+
+  puts "Initializing SSH connection to #{instance[:dns_name]}..."
+  exec "ssh #{instance[:dns_name]}"
+
+rescue Exception => e
+  puts e.message
+end
+
+
+
