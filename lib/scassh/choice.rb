@@ -15,6 +15,7 @@ module Scassh
 
     def select_cloud
       cloud_list = clouds
+      raise "Sorry, no cloud available." if cloud_list.size < 1
       show_list(cloud_list)
       index = ask("\n--> Please select cloud:")
       cloud_list[index.to_i - 1] rescue nil unless index.to_i == 0
@@ -22,6 +23,7 @@ module Scassh
 
     def select_instance(cloud_id)
       instance_list = instances(cloud_id)
+      raise "Sorry, no instance available in this cloud." if instance_list.size < 1
       show_list(instance_list)
       index = ask("\n--> Please select instance:")
       instance_list[index.to_i - 1] rescue nil unless index.to_i == 0
