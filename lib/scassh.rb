@@ -1,5 +1,3 @@
 require "scassh/version"
-
-module Scassh
-  # Your code goes here...
-end
+require "scassh/api"
+require "scassh/choice"
