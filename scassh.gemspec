@@ -15,4 +15,10 @@ Gem::Specification.new do |gem|
   gem.name          = "scassh"
   gem.require_paths = ["lib"]
   gem.version       = Scassh::VERSION
+
+
+  gem.add_runtime_dependency "rest-client"
+  gem.add_runtime_dependency "json"
+  gem.add_runtime_dependency "highline"
+
 end
