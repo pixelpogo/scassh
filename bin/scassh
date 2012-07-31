@@ -29,8 +29,7 @@ OptionParser.new do |opts|
 
   opts.on_tail("-c", "--clear-cache", "Clear Scalarium API cache") do
     Scassh::Api::reset_cache
-    puts "Scalarium API cache cleared."
-    exit
+    options.cache_cleared = true
   end
 
   begin
@@ -54,6 +53,7 @@ begin
   puts "\n         Scassh - ssh to your Scalarium instance"
   puts "\n=============================================================\n"
 
+  puts "\n\nScalarium API cache cleared..." if options.cache_cleared
 
   puts "\n\n"
   puts "\nAvailable Scalarium clouds:"
