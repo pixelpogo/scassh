@@ -53,7 +53,7 @@ module Scassh
     def cache_request(url, result)
       cache = get_cache
       cache = {} if cache.nil?
-      cache[url] = result
+      cache[url] = clean_cache(result)
       write_cache(cache)
     end
 
@@ -69,6 +69,29 @@ module Scassh
 
     def get_cache
       YAML.load_file(cache_file) if File.exist?(cache_file)
+    end
+
+    def clean_cache(cache)
+      if cache.class == Array
+        cache.map{|i| delete_keys_from_cache(i)}
+      elsif cache.class == Hash
+        delete_keys_from_cache(cache)
+      else
+        cache
+      end
+    end
+
+    def delete_keys_from_cache(hash)
+      @uncacheable_keys ||= uncacheable_keys
+      hash.delete_if do |key,value|
+        @uncacheable_keys.include?(key.to_s)
+      end
+    end
+
+    def uncacheable_keys
+      default = ["scm_type", "scm_url", "scm_user", "scm_password", "scm_revision", "scm_ssh_key", "ssh_key_id", "credential_id", "custom_json", "ssh_host_dsa_key_private", "ssh_host_dsa_key_public", "ssh_host_rsa_key_private", "ssh_host_rsa_key_public"]
+      custom  = ENV['SCASSH_UNCACHEABLE_KEYS'].split(",").map{|i| i.strip} rescue []
+      default | custom
     end
 
     def cache_file
