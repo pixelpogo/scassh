@@ -45,8 +45,8 @@ module Scassh
     end
 
     def token
-     key = (ENV["SCALARIUMAPIKEY"] || IO.read("#{Etc.getpwuid.dir}/.scalarium-api-key") ) rescue nil
-     raise "Error! Can't find Scalarium API Key. It is expected to reside in ~/.scalarium-api-key or ENV['SCALARIUMAPIKEY']" if key.nil?
+     key = (ENV["SCALARIUM_API_TOKEN"] || IO.read("#{Etc.getpwuid.dir}/.scalarium-api-token") ) rescue nil
+     raise "Error! Can't find Scalarium API Key. It is expected to reside in ~/.scalarium-api-token or ENV['SCALARIUM_API_TOKEN']" if key.nil?
      key
     end
 
